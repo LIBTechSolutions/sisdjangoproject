@@ -2,20 +2,28 @@
 
 ## Getting started
 
-To get started with your new project, run the `setup_project.sh` bash file with the name of your new project.  For example, if you have a new project called "world-domination", run the following code:
+To get started, run a Docker build, as follows 
 
-```
-./setup_project.sh world-domination
-```
-
-And start your plans for taking over the world!
-
-## Building and the like
-
-Once you have run the setup project script, run 
-
-```
-dokcer-compose build world-domination
+```sh
+docker-compose build datacataglogue
 ```
 
-This will build the required containers
+Next, run the database
+
+```sh
+docker-compose up -d db
+```
+
+and then migrate the database
+
+```sh
+docker-compose run datacatalogue setuplocaldb
+```
+
+Finally, run the webserver
+
+```sh
+docker-compose up datacatalogue
+```
+
+and visit http://localhost:8000 in your browser.
