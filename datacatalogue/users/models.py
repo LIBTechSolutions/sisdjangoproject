@@ -25,12 +25,6 @@ class Tenant(models.Model):
         on_delete = models.CASCADE
     )
 
-    email = models.EmailField(
-        _('Email Address of contact at the Organisation'),
-        null=False,
-        blank=False
-    )
-
     url = models.CharField(
         _('Tenant home page'),
         max_length=256,
