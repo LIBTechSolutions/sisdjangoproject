@@ -17,12 +17,12 @@ class Tenant(models.Model):
         max_length=100,
         null=False,
         blank=False,
-        default = "limited"
+        default="limited"
     )
 
     contact_id = models.ForeignKey(
         Contact,
-        on_delete = models.CASCADE
+        on_delete=models.CASCADE
     )
 
     url = models.CharField(
@@ -36,109 +36,112 @@ class Tenant(models.Model):
 class LDAP(models.Model):
 
     """
-    Model to represent a LDAP.  
+    Model to represent a LDAP. Lightweight Directory Access Protocol (LDAP),
+    this will will enable access to the directories of organizations within the
+    HIS data warehouse
     """
 
     dc = models.CharField(
         _('LDAP domainComponent (DC)'),
-        max_length = 100,
-        null = False,
-        blank = False,
-        default = "DC="
+        max_length=100,
+        null=False,
+        blank=False,
+        default="DC="
     )
-        
+
     cn = models.CharField(
          _('LDAP commonName (CN)'),
-        max_length = 100,
-        null = False,
-        blank = False,
-        default = "CN="
+         max_length=100,
+         null=False,
+         blank=False,
+         default="CN="
     )
 
     ou = models.CharField(
          _('LDAP organizationalUnitName (OU)'),
-        max_length = 100,
-        null = False,
-        blank = False,
-        default = "OU="
+         max_length=100,
+         null=False,
+         blank=False,
+         default="OU="
     )
 
     o = models.CharField(
          _('LDAP organizationalName (O)'),
-        max_length = 100,
-        null = False,
-        blank = False,
-        default = "O="
+         max_length=100,
+         null=False,
+         blank=False,
+         default="O="
     )
 
     street = models.CharField(
          _('LDAP streetAddress (STREET)'),
-        max_length = 100,
-        null = False,
-        blank = False,
-        default = "STREET="
+         max_length=100,
+         null=False,
+         blank=False,
+         default="STREET="
     )
 
     l = models.CharField(
          _('LDAP localityName (L)'),
-        max_length = 100,
-        null = False,
-        blank = False,
-        default = "L="
+         max_length=100,
+         null=False,
+         blank=False,
+         default="L="
     )
 
     street = models.CharField(
          _('LDAP stateOrProvinceName (ST)'),
-        max_length = 100,
-        null = False,
-        blank = False,
-        default = "ST="
+         max_length=100,
+         null=False,
+         blank=False,
+         default="ST="
     )
 
     cn = models.CharField(
          _('LDAP countryName(C)'),
-        max_length = 100,
-        null = False,
-        blank = False,
-        default = "C="
+         max_length=100,
+         null=False,
+         blank=False,
+         default="C="
     )
 
     uid = models.CharField(
          _('LDAP userId (UID)'),
-        max_length = 100,
-        default = "UID="
+         max_length=100,
+         default="UID="
     )
 
     dn = models.AutoField(
          _('LDAP distinguishedName (DN)')
-        
+                 
     )
 
 
 class Contact(models.Model):
 
     """
-    Model to represent a Contact.  
+    Model to represent a Contact. A contact is a person that represent
+    an organization within the HIS data warehouse
     """
 
     first_name = models.CharField(
          _('First name of contact'),
-        max_length = 30,
-        null = False,
-        blank = False
+         max_length=30,
+         null=False,
+         blank=False
     )
 
     last_name = models.CharField(
          _('Last name of contact'),
-        max_length = 30,
-        null = False,
-        blank = False
+         max_length=30,
+         null=False,
+         blank=False
     )
 
     email_address = models.EmailField(
         _('E-mail address of contact'),
-        null = False,
-        blank = False
+        null=False,
+        blank=False
     )
 
     phone_number = models.CharField(
@@ -150,6 +153,6 @@ class Contact(models.Model):
 
     ldap_id = models.ForeignKey(
         LDAP,
-        on_delete = models.CASCADE
+        on_delete=models.CASCADE
     )
 
