@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 class LDAP(models.Model):
 
     """
-    Model to represent a LDAP. Lightweight Directory Access Protocol (LDAP),
+    Model to represent a LDAP. Lightweight Directory Access Protocol
     this will will enable access to the directories of organizations within the
     HIS data warehouse
     """
