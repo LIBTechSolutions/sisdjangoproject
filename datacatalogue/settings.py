@@ -34,7 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    ...
+    'users',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
 ]
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -83,11 +91,11 @@ WSGI_APPLICATION = 'wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME', 'datacatalogue'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-        'USER': os.environ.get('DB_USERNAME', 'postgres'),
-        'HOST': os.environ.get('DB_HOSTNAME', 'db'),
-        'PORT': os.environ.get('DB_PORT', ''),
+        'NAME': 'data_catalogue',
+        'USER': 'zowolu',
+        'PASSWORD': 'israel2016',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 

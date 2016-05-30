@@ -4,35 +4,6 @@ from django.db import models
 from django.utils.translation import ugettext as _
 
 
-class Tenant(models.Model):
-
-    """
-    Model to represent a single Tenant.  A Tenant is a person or an
-    organisation that is responsible for an application that contributes data
-    to the HIS data warehouse
-    """
-
-    role = models.CharField(
-        _('Scope (used by view service)'),
-        max_length=100,
-        null=False,
-        blank=False,
-        default="limited"
-    )
-
-    contact_id = models.ForeignKey(
-        Contact,
-        on_delete=models.CASCADE
-    )
-
-    url = models.CharField(
-        _('Tenant home page'),
-        max_length=256,
-        null=False,
-        blank=False
-    )
-
-
 class LDAP(models.Model):
 
     """
@@ -111,11 +82,15 @@ class LDAP(models.Model):
          default="UID="
     )
 
-    dn = models.AutoField(
-         _('LDAP distinguishedName (DN)')
+    dn = models.CharField(
+         _('LDAP distinguishedName (DN)'),
+         max_length=255,
+         null=False,
+         blank=False,
+         default="DN="
                  
     )
-
+    
 
 class Contact(models.Model):
 
@@ -155,4 +130,38 @@ class Contact(models.Model):
         LDAP,
         on_delete=models.CASCADE
     )
+
+
+class Tenant(models.Model):
+
+    """
+    Model to represent a single Tenant.  A Tenant is a person or an
+    organisation that is responsible for an application that contributes data
+    to the HIS data warehouse
+    """
+
+    role = models.CharField(
+        _('Scope (used by view service)'),
+        max_length=100,
+        null=False,
+        blank=False,
+        default="limited"
+    )
+
+    contact_id = models.ForeignKey(
+        Contact,
+        on_delete=models.CASCADE
+    )
+
+    url = models.CharField(
+        _('Tenant home page'),
+        max_length=256,
+        null=False,
+        blank=False
+    )
+
+
+
+
+
 
