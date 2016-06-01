@@ -90,6 +90,9 @@ class LDAP(models.Model):
          default="DN="
                  
     )
+
+    def __str__(self):
+        return self.dc
     
 
 class Contact(models.Model):
@@ -131,6 +134,9 @@ class Contact(models.Model):
         on_delete=models.CASCADE
     )
 
+    def __str__(self):
+        return self.first_name
+
 
 class Tenant(models.Model):
 
@@ -159,6 +165,9 @@ class Tenant(models.Model):
         null=False,
         blank=False
     )
+
+    def __str__(self):
+        return self.role
 
 
 

@@ -1,5 +1,42 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block content %}
-<h1>datacatalogue</h1>
+<h1>{{ title }} datacatalogue</h1>
+
+{% for obj in object_ldap %}
+
+{{obj.dc}}</br>
+{{obj.cn}}</br>
+{{obj.ou}}</br>
+{{obj.o}}</br>
+{{obj.street}}</br>
+{{obj.l}}</br>
+{{obj.street}}</br>
+{{obj.cn}}</br>
+{{obj.uid}}</br>
+{{obj.dn}}</br>
+{{obj.id}}</br>
+
+{% endfor %}
+
+{% for obj in object_contact %}
+
+{{obj.first_name}}</br>
+{{obj.last_name}}</br>
+{{obj.email_address}}</br>
+{{obj.phone_number}}</br>
+{{obj.street}}</br>
+{{obj.ldap_id}}</br>
+{{obj.id}}</br>
+
+{% endfor %}
+
+{% for obj in object_tenant %}
+
+{{obj.role}}</br>
+{{obj.contact_id}}</br>
+{{obj.url}}</br>
+{{obj.id}}</br>
+
+{% endfor %}
 {% endblock %}
