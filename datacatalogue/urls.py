@@ -15,33 +15,64 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import LDAP
+from users.models import LDAP
+from users.models import Contact
+from users.models import Tenant
 from rest_framework import serializers, viewsets, routers
 
 # Serializers define the API representation.
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+
+class LDAPSerializer(serializers.HyperlinkedModelSerializer):
     
     class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'is_staff')
+        model = LDAP
+        fields = ('dc', 'cn', 'ou', 'o', 'street', 'l', 'street', 'cn', 'uid', 'dn')
 
 
-# ViewSets define the view behavior.
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# ViewSets to define the view behavior LDAP.
+class LDAPViewSet(viewsets.ModelViewSet):
+    queryset = LDAP.objects.all()
+    serializer_class = LDAPSerializer
+
+
+class ContactSerializer(serializers.HyperlinkedModelSerializer):
+    
+    class Meta:
+        model = Contact
+        fields = ('first_name', 'last_name', 'email_address', 'phone_number', 'ldap_id')
+
+
+# ViewSets to define the view behavior Contact.
+class ContactViewSet(viewsets.ModelViewSet):
+    queryset = Contact.objects.all()
+    serializer_class = ContactSerializer
+
+
+class TenantSerializer(serializers.HyperlinkedModelSerializer):
+    
+    class Meta:
+        model = Tenant
+        fields = ('role', 'contact_id', 'url')
+
+
+# ViewSets to define the view behavior Tenant.
+class TenantViewSet(viewsets.ModelViewSet):
+    queryset = Tenant.objects.all()
+    serializer_class = TenantSerializer
 
 
 # Routers provide a way of automatically determining the URL conf.
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+router.register(r'ldap', LDAPViewSet)
+router.register(r'contact', ContactViewSet)
+router.register(r'tenant', TenantViewSet)
 
 
 urlpatterns = [
-    # url(r'^', include(router.urls)),
+    url(r'^', include(router.urls)),
     url(r'^admin/', admin.site.urls),
-    url(r'^users/', include("users.urls")),
-    # url(r'^', include('pages.urls')),
-    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    url(r'^', include('pages.urls')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
