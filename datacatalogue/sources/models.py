@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from users.models import Contact
+from users.models import Tenant
 from django.utils.translation import ugettext as _
 
 # Create your models here.
@@ -10,13 +12,48 @@ ACCESS_METHOD_CHOICE = (
     (u"HTTP POST", u"HTTP POST"),
     (u"FTP", u"FTP"),
     (u"SFTP", u"SFTP"),
-    (u"GOOGLE DRIVE", u"GOOGLE DRIVE")
+    (u"GOOGLE DRIVE", u"GOOGLE DRIVE"),
     (u"S3", u"S3"),
     (u"EMAIL", u"EMAIL"),
 )
 
+AVAILABILITY_CHOICE = (
+    (u"Online", u"Online"),
+    (u"Offline", u"Offline"),
+)
+
 # ToDo
 COMPRESSION_CHOICES = (
+    (u"DEFLATE", u"DEFLATE"),
+    (u"LZ", u"LZ"),
+    (u"LZR", u"LZR"),
+    (u"LZW", u"LZW"),
+)
+
+ENCODING_CHOICES = (
+    (u"US-ASCII", u"US-ASCII"),
+    (u"UTF-8", u"UTF-8"),
+    (u"UTF-16", u"UTF-16"),
+    (u"UTF-32", u"UTF-32"),
+)
+
+LANGUAGE_CHOICES = (
+    (u"Arabic", u"Arabic"),
+    (u"English", u"English"),
+    (u"French", u"French"),
+    (u"German", u"German"),
+    (u"Portuguese", u"Portuguese"),
+    (u"Spanish", u"Spanish"),
+)
+
+SCHEMA_TYPE_CHOICES = (
+    (u"None", u"None"),
+    (u"Column Headers", u"Column Headers"),
+    (u"AVRO", u"AVRO"),
+    (u"HXL", u"HXL"),
+    (u"JSON-LD", u"JSON-LD"),
+    (u"RDF", u"RDF"),
+    (u"XML", u"XML"),
 )
 
 
@@ -28,19 +65,26 @@ class Source(models.Model):
     application
     """
 
-    tenant = models.ForeignKey(
-        'tenants.Tenant',
+    tenant_id = models.ManyToManyField(
+        'users.Tenant',
+        # I think we should always set this to NULL if we delete the tenant
+        # because that way we can always post-process historical data 
+        related_query_name='source',
+        blank=False,
+    )
+
+    contact_id = models.OneToOneField(
+        'users.Contact',
         # I think we should always set this to NULL if we delete the tenant
         # because that way we can always post-process historical data
-        on_delete=models.SET_NULL,
         related_name='sources',
         related_query_name='source',
         null=False,
-        blank=False
+        blank=False,
     )
 
     access_method = models.CharField(
-        _('Access Method'),
+        _('Description of access protocol'),
         max_length=30,
         choices=ACCESS_METHOD_CHOICE,
         default=u"HTTP GET",
@@ -48,25 +92,209 @@ class Source(models.Model):
         blank=False
     )
 
-    availability = models.BoolField(
-        _('Availability'),
-        default=True,
+    availability = models.CharField(
+        _('Last known availability'),
+        max_length=30,
+        choices=AVAILABILITY_CHOICE,
+        default=u"Online",
         null=True,
         blank=True
     )
 
     # ToDo
     compression = models.CharField(
-        _('Compression'),
+        _('Compression algorithm used with source'),
         max_length=30,
         choices=COMPRESSION_CHOICES,
-        default=u'',
+        default=u' ',
         null=False,
         blank=False
     )
 
     description = models.TextField(
-        _('Description'),
+        _('Link to digital rights document (e.g. contract)'),
+        null=False,
+        default=' ',
+        blank=False
+    )
+
+    digital_rights = models.URLField(
+        _('Overview of the data source (provided by maintainer)'),
+        max_length=100,
+        null=False,
+        default=' ',
+        blank=False
+    )
+
+    encoding = models.CharField(
+        _('Character encoding (e.g. UTF-8)'),
+        max_length=30,
+        choices=ENCODING_CHOICES,
+        default=u"UTF-8",
+        null=True,
+        blank=True
+    )
+
+    encryption = models.CharField(
+        _('Name / link to encryption algorithm used'),
+        max_length=30,
+        default=u"UTF-8",
+        null=True,
+        blank=True
+    )
+
+    language = models.CharField(
+        _('Language in which the data is written'),
+        max_length=30,
+        choices=LANGUAGE_CHOICES,
+        default=u"English",
+        null=True,
+        blank=True
+    )
+
+    last_accessed = models.DateField(
+        _('Last known access'),
+        auto_now=True,
+        null=True,
+        blank=True
+    )
+
+    last_modified = models.DateField(
+        _('Last record update'),
+        auto_now_add=True,
+        null=False,
+        blank=False
+    )
+
+    last_refreshed = models.DateField(
+        _('Last known refresh date'),
+        auto_now=False,
+        default=' ',
+        null=False,
+        blank=False
+    )
+
+    license_type = models.URLField(
+        _('Name of primary business contact'),
+        max_length=100,
+        default=' ',
+        null=False,
+        blank=False
+    )
+
+    maintainer = models.CharField(
+        _('License type (e.g. Open Data Commons)'),
+        max_length=30,
+        default=' ',
+        null=False,
+        blank=False
+    )
+
+    maintainer_email = models.EmailField(
+        _('E-mail address of primary business contact'),
+        max_length=255,
+        default=' ',
+        null=False,
+        blank=False
+    )
+
+    maintainer_phone = models.CharField(
+        _('Phone number of primary business contact'),
+        max_length=255,
+        default=' ',
+        null=False,
+        blank=False
+    )
+
+    pii = models.BooleanField(
+        _('TRUE if data source contains personally-identifiable information or protected health information'),
+        default=False,
+        null=False,
+        blank=False
+    )
+
+    records = models.BigIntegerField(
+        _('Last known record count'),
+        default=' ',
+        null=True,
+        blank=True
+    )
+
+    regex = models.CharField(
+        _('RegEx expression used with access method'),
+        max_length=30,
+        default=' ',
+        null=True,
+        blank=True
+    )
+
+    schema_type = models.CharField(
+        _('Schema type used to describe data source attributes'),
+        max_length=30,
+        choices=SCHEMA_TYPE_CHOICES,
+        default=None,
+        null=False,
+        blank=False
+    )
+
+    size = models.BigIntegerField(
+        _('Last known size (MB)'),
+        default=' ',
+        null=True,
+        blank=True
+    )
+
+    system_of_record = models.BooleanField(
+        _('Last known size (MB)'),
+        max_length=30,
+        default=False,
+        null=False,
+        blank=True
+    )
+
+    uri_access = models.URLField(
+        _('Access URI for data'),
+        max_length=100,
+        default=' ',
+        null=False,
+        blank=False
+    )
+
+    uri_documenation = models.URLField(
+        _('Link to API documentation'),
+        max_length=100,
+        default=' ',
+        null=True,
+        blank=True
+    )
+
+    uri_endpoint = models.URLField(
+        _('Access URI for endpoint API'),
+        max_length=100,
+        default=' ',
+        null=True,
+        blank=True
+    )
+
+    uri_schema = models.URLField(
+        _('Access URI for schema (supply if schema_type is not "None")'),
+        max_length=100,
+        default=' ',
+        null=True,
+        blank=True
+    )
+
+    title = models.CharField(
+        _('Descriptive title (provided by maintainer)'),
+        max_length=255,
+        default=' ',
+        null=False,
+        blank=False
+    )
+
+    visibility = models.BooleanField(
+        _('Visible in view service'),
+        default=True,
         null=False,
         blank=False
     )

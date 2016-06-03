@@ -19,6 +19,7 @@ from django.contrib import admin
 from users.models import LDAP
 from users.models import Contact
 from users.models import Tenant
+from sources.models import Source
 from rest_framework import serializers, viewsets, routers
 
 # Serializers define the API representation.
@@ -63,11 +64,32 @@ class TenantViewSet(viewsets.ModelViewSet):
     serializer_class = TenantSerializer
 
 
+class SourceSerializer(serializers.HyperlinkedModelSerializer):
+    
+    class Meta:
+        model = Source
+        fields = ('tenant_id', 'contact_id', 'access_method', 'availability', 
+                  'compression', 'description', 'digital_rights', 'encoding',
+                  'encryption', 'encryption', 'language', 'last_accessed', 
+                  'last_modified', 'last_refreshed', 'license_type', 
+                  'maintainer', 'maintainer_email', 'maintainer_phone', 'pii',
+                  'records', 'regex', 'schema_type', 'size', 'system_of_record',
+                  'uri_access', 'uri_documenation', 'uri_endpoint', 'uri_schema', 
+                  'title', 'visibility')
+
+
+# ViewSets to define the view behavior Source.
+class SourceViewSet(viewsets.ModelViewSet):
+    queryset = Source.objects.all()
+    serializer_class = SourceSerializer
+
+
 # Routers provide a way of automatically determining the URL conf.
 router = routers.DefaultRouter()
 router.register(r'ldap', LDAPViewSet)
 router.register(r'contact', ContactViewSet)
 router.register(r'tenant', TenantViewSet)
+router.register(r'source', SourceViewSet)
 
 
 urlpatterns = [
