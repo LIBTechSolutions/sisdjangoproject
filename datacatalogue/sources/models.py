@@ -197,7 +197,7 @@ class Source(models.Model):
         blank=True
     )
 
-    regex = models.TextField(
+    json_schema = models.TextField(
         _('RegEx expression used with access method'),
         max_length=30,
         default=' ',
