@@ -1,0 +1,20 @@
+db:
+  image: "postgres:9.4"
+
+datacatalogue:
+  build: .
+  environment:
+      DB_HOSTNAME: "db"
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: ""
+      DB_PORT: ""
+      DB_NAME: "datacatalogue"
+      STATIC_ROOT: "/var/www/static/"
+  volumes:
+    - ./:/code/
+  hostname: datacatalogue-app
+  command: manage runserver 0.0.0.0:8000
+  ports:
+    - "8000:8000"
+  links:
+    - db
