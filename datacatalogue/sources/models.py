@@ -5,7 +5,6 @@ from users.models import Contact
 from users.models import Tenant
 from django.utils.translation import ugettext as _
 
-# Create your models here.
 
 ACCESS_METHOD_CHOICE = (
     (u"HTTP GET", u"HTTP GET"),
@@ -22,7 +21,6 @@ AVAILABILITY_CHOICE = (
     (u"Offline", u"Offline"),
 )
 
-# ToDo
 COMPRESSION_CHOICES = (
     (u"DEFLATE", u"DEFLATE"),
     (u"LZ", u"LZ"),
@@ -31,15 +29,15 @@ COMPRESSION_CHOICES = (
 )
 
 ENCODING_CHOICES = (
-    (u"US-ASCII", u"US-ASCII"),
     (u"UTF-8", u"UTF-8"),
+    (u"US-ASCII", u"US-ASCII"),
     (u"UTF-16", u"UTF-16"),
     (u"UTF-32", u"UTF-32"),
 )
 
 LANGUAGE_CHOICES = (
-    (u"Arabic", u"Arabic"),
     (u"English", u"English"),
+    (u"Arabic", u"Arabic"),
     (u"French", u"French"),
     (u"German", u"German"),
     (u"Portuguese", u"Portuguese"),
@@ -67,16 +65,12 @@ class Source(models.Model):
 
     tenant_id = models.ManyToManyField(
         'users.Tenant',
-        # I think we should always set this to NULL if we delete the tenant
-        # because that way we can always post-process historical data 
         related_query_name='source',
         blank=False,
     )
 
     contact_id = models.OneToOneField(
         'users.Contact',
-        # I think we should always set this to NULL if we delete the tenant
-        # because that way we can always post-process historical data
         related_name='sources',
         related_query_name='source',
         null=False,
@@ -87,7 +81,7 @@ class Source(models.Model):
         _('Description of access protocol'),
         max_length=30,
         choices=ACCESS_METHOD_CHOICE,
-        default=u"HTTP GET",
+        default=u' ',
         null=False,
         blank=False
     )
@@ -96,12 +90,11 @@ class Source(models.Model):
         _('Last known availability'),
         max_length=30,
         choices=AVAILABILITY_CHOICE,
-        default=u"Online",
+        default=u' ',
         null=True,
         blank=True
     )
 
-    # ToDo
     compression = models.CharField(
         _('Compression algorithm used with source'),
         max_length=30,
@@ -130,15 +123,15 @@ class Source(models.Model):
         _('Character encoding (e.g. UTF-8)'),
         max_length=30,
         choices=ENCODING_CHOICES,
-        default=u"UTF-8",
-        null=True,
-        blank=True
+        default=u' ',
+        null=False,
+        blank=False
     )
 
     encryption = models.CharField(
         _('Name / link to encryption algorithm used'),
-        max_length=30,
-        default=u"UTF-8",
+        max_length=100,
+        default=' ',
         null=True,
         blank=True
     )
@@ -147,9 +140,9 @@ class Source(models.Model):
         _('Language in which the data is written'),
         max_length=30,
         choices=LANGUAGE_CHOICES,
-        default=u"English",
-        null=True,
-        blank=True
+        default=u' ',
+        null=False,
+        blank=False
     )
 
     last_accessed = models.DateField(
@@ -190,24 +183,8 @@ class Source(models.Model):
         blank=False
     )
 
-    maintainer_email = models.EmailField(
-        _('E-mail address of primary business contact'),
-        max_length=255,
-        default=' ',
-        null=False,
-        blank=False
-    )
-
-    maintainer_phone = models.CharField(
-        _('Phone number of primary business contact'),
-        max_length=255,
-        default=' ',
-        null=False,
-        blank=False
-    )
-
     pii = models.BooleanField(
-        _('TRUE if data source contains personally-identifiable information or protected health information'),
+        _('Does source contain personally-identifiable information?'),
         default=False,
         null=False,
         blank=False
@@ -220,7 +197,7 @@ class Source(models.Model):
         blank=True
     )
 
-    regex = models.CharField(
+    regex = models.TextField(
         _('RegEx expression used with access method'),
         max_length=30,
         default=' ',
@@ -245,7 +222,7 @@ class Source(models.Model):
     )
 
     system_of_record = models.BooleanField(
-        _('Last known size (MB)'),
+        _('Is this is a primary resource? (i.e. not a replica or extract)'),
         max_length=30,
         default=False,
         null=False,
