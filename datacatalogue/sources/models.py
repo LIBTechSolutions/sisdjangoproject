@@ -71,8 +71,7 @@ class Source(models.Model):
 
     contact_id = models.OneToOneField(
         'users.Contact',
-        related_name='sources',
-        related_query_name='source',
+        related_name='maintainer',
         null=False,
         blank=False,
     )
@@ -167,15 +166,7 @@ class Source(models.Model):
         blank=False
     )
 
-    license_type = models.URLField(
-        _('Name of primary business contact'),
-        max_length=100,
-        default=' ',
-        null=False,
-        blank=False
-    )
-
-    maintainer = models.CharField(
+    license_type = models.CharField(
         _('License type (e.g. Open Data Commons)'),
         max_length=30,
         default=' ',
