@@ -5,7 +5,7 @@
 To get started, run a Docker build, as follows 
 
 ```sh
-docker-compose build datacataglogue
+docker-compose build sisproject
 ```
 
 Next, run the database
@@ -17,13 +17,13 @@ docker-compose up -d db
 and then migrate the database
 
 ```sh
-docker-compose run datacatalogue setuplocaldb
+docker-compose run sisproject setuplocaldb
 ```
 
 Finally, run the webserver
 
 ```sh
-docker-compose up datacatalogue
+docker-compose up sisproject
 ```
 
 and visit http://localhost:8000 in your browser.

@@ -7,32 +7,32 @@ show_help() {
     echo """
     Commands
     manage        : Invoke django manage.py commands
-    setuplocaldb  : Create empty database for django-datacatalogue
+    setuplocaldb  : Create empty database for django-sisproject
     setupproddb   : Create empty database for production
-    test_coverage : runs tests with coverage output
+    run_tests     : runs tests
     start         : start webserver behind nginx (prod for serving static files)
     """
 }
 
 setup_local_db() {
     set +e
-    cd /code/datacatalogue/
-    /var/env/bin/python manage.py sqlcreate | psql -U $DB_USERNAME -h $DB_HOSTNAME
+    cd /code/
+    python manage.py sqlcreate | psql -U $DB_USERNAME -h $DB_HOSTNAME
     set -e
-    /var/env/bin/python manage.py migrate
+    python manage.py migrate
 }
 
 setup_prod_db() {
     set +e
-    cd /code/datacatalogue/
+    cd /code/
     set -e
-    /var/env/bin/python manage.py migrate
+    python manage.py migrate
 }
 
 case "$1" in
     manage )
-        cd /code/datacatalogue/
-        /var/env/bin/python manage.py "${@:2}"
+        cd /code/
+        python manage.py "${@:2}"
     ;;
     setuplocaldb )
         setup_local_db
@@ -40,27 +40,14 @@ case "$1" in
     setupproddb )
         setup_prod_db
     ;;
-    test_coverage)
-        source /var/env/bin/activate
-        coverage run --rcfile="/code/.coveragerc" /code/manage.py test core
-        mkdir /var/annotated
-        coverage annotate --rcfile="/code/.coveragerc"
-        coverage report --rcfile="/code/.coveragerc"
-        cat << "EOF"
-  ____                 _     _       _     _
- / ___| ___   ___   __| |   (_) ___ | |__ | |
-| |  _ / _ \ / _ \ / _` |   | |/ _ \| '_ \| |
-| |_| | (_) | (_) | (_| |   | | (_) | |_) |_|
- \____|\___/ \___/ \__,_|  _/ |\___/|_.__/(_)
-                          |__/
-
-EOF
+    run_tests)
+        cd /code/
+        python manage.py test
     ;;
     start )
-        cd /code/datacatalogue/
-        /var/env/bin/python manage.py collectstatic --noinput
-        /usr/local/bin/supervisord -c /etc/supervisor/supervisord.conf
-        nginx -g "daemon off;"
+        cd /code/
+        python manage.py collectstatic --noinput
+        /usr/local/bin/supervisord -c /etc/supervisor/supervisord.conf -n
     ;;
     bash )
         bash "${@:2}"

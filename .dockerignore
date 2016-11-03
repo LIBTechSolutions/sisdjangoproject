@@ -1,0 +1,19 @@
+docker-compose.yml
+*.swp
+dist/
+.git
+.travis.yml
+.gitignore
+travis_deploy.sh
+Dockerrun.aws.json
+src/app/config.js
+
+# Logs
+logs
+*.log
+
+# Coverage directory used by tools like istanbul
+coverage
+
+# .DS_Store
+.DS_Store

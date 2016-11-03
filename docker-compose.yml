@@ -1,18 +1,25 @@
 db:
-  image: "postgres:9.4"
+  image: postgres:9.4
+  environment:
+    POSTGRES_USER: sisproject
+    POSTGRES_DB: sisproject
+    POSTGRES_PASSWORD: sisproject
+  ports:
+    - "5433:5432"
 
-datacatalogue:
+sisproject:
   build: .
   environment:
       DB_HOSTNAME: "db"
-      DB_USERNAME: "postgres"
-      DB_PASSWORD: ""
-      DB_PORT: ""
-      DB_NAME: "datacatalogue"
+      DB_USERNAME: "sisproject"
+      DB_PASSWORD: "sisproject"
+      DB_PORT: "5432"
+      DB_NAME: "sisproject"
       STATIC_ROOT: "/var/www/static/"
+  container_name: sisproject
   volumes:
-    - ./:/code/
-  hostname: datacatalogue-app
+    - ./sisproject:/code/
+  hostname: sisproject-app
   command: manage runserver 0.0.0.0:8000
   ports:
     - "8000:8000"

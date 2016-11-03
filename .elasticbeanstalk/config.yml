@@ -1,0 +1,13 @@
+branch-defaults:
+  deploy-to-elastic-beanstalk:
+    environment: school-information-systems-dev
+  master:
+    environment: school-information-systems-dev
+global:
+  application_name: school-information-systems-dev
+  default_ec2_keyname: aws-deploy
+  default_platform: 64bit Amazon Linux 2016.03 v2.1.1 running Multi-container Docker
+    1.9.1 (Generic)
+  default_region: eu-west-1
+  profile: null
+  sc: git

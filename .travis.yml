@@ -1,0 +1,34 @@
+language: python
+python:
+- '2.7'
+sudo: required
+services:
+- docker
+cache:
+  directories:
+  - $HOME/.cache/pip
+env:
+  global:
+  - DOCKER_COMPOSE_VERSION: 1.5.2
+  - DOCKER_BUILD_REPO_SLUG: techSoL/school-information-systems
+  - DOCKER_IMAGE_REPO: 387526361725.dkr.ecr.eu-west-1.amazonaws.com
+  - DOCKER_IMAGE_NAME: school-information-systems
+  - secure: h6AcKwmNfMVnSgju6LohZvcn6PrTszVcMigsjHvvyHq87QOpy8onVwQOxzOmlygSqguVR83oOcgtI+rx+rioDAbEraxY7CAWjYETbIbDWn9uIh1GUpI+YuTxPsr8iCp7M0xZBTbCGYHcXFw8/2QKSBbbaU6mzCLpEXlQbMU2wKSQXFvh8LD31A5K7vnS0i66/SzThO11xeSigQiut6Cecb1pjkid6SFZE17aFUIQ2UcCi1RKM3Lt6ivYIowwjMCwe6eUaNhPQ31P68L8vuyUtD5zg6jViWI0ZdBqb4hBOLfoW4mnbmR693hdrpPWUji76yFE+OFdchfIWZ5QBe1RrWkbsmHPM9mn0x4LKFNP99DwTcoOWOerHAbLxhx32m010qhrrj2l65L63uxHZA+LZItBUfiqZliC0zGRM5OsVfCSdZC+/oB1fKVjCYfpAJJFa73bNlM9wTopFx07EL7N0C+w26F5YV7QUbEGHUjaqj7FpHKAFxLt1Cwhx0QyIhAsi0pRd7FMk+k6DPJVESNsyg9PyJ99h0POY3/q1yzno5Ddjfbym26zbeIV5kV+lGD9rmET4ZZajvMZeqpF49TNxTkAlnWEHfh09d0Eeudj1Ov33+d66ik1pptA+u9mGPcHgjwpCHeQUIlfmlu+T71Pez/r4D0YO3ESdZx50xk0tJQ=
+  - secure: NvYM/kRfmlGsaLxVHxU4WDGUT2DPFOgjUz/E5MJSzMWRbUlzSV3S6OBcxkgOdFtsmlcVyLbd4uzrkvVpUcTmA+UCBXuyn3PkxkkoalBjJzacjaF6+OWS3jElTHA1IzhH92PaVkTMIJA2p/2BZVPvHnGwlQW7boPVaa0egR9Ze7g6eMNEeOMO/Th3QoedgZjx3gulgPz9qU3EmlHrMul/5nrG7x/MUWdxKeeosiPcxQYHBW8yFiV67IkdWY7TCFwh0FTXdU7EhT6ApWbzvGSJul69S8G5qg5ljC/YpegHnJxoTzN99j21ztg/jyb7hUrAlPs3irwpzgR874F8KGEDCg9vj5adYsrZmX7dj/mg4h4P4pCzQLJ7eJFuvGAHqr4HDr8kx0fRQLdNndk+PwUAXO1LhyfxfKJytFP1tzb/cMa7nn70Oso+rVxZphVwLef5GVdSykCTkGzQ4PpkEx8GyRgTgqk320kdDo6XVnUdc9vhLbjAHSM7A6y4TjO3qJ80htwc2XvbxPvMHOpZuvPaXR+yTESItYOMDixVdxmUEoxbkHmnbr98EkNepD7UL/fp+mkEdvw0RoTi7WBCK6Nq3ULPLJTdRPXtlAe4KC+uf2SyIWd4CbFUEhYF1/zDGqi1NNKVhmyOB8NZPkfH6j6pf2TAgk7A76CpFYJdwMu7DNE=
+before_install:
+- sudo apt-get -qq update && sudo apt-get -qq -y install zip gettext-base
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin
+install:
+- pip install awscli
+- pip install awsebcli
+script:
+- docker-compose run sisproject manage test
+after_success:
+- ./conf/docker-build.sh
+branches:
+  except:
+  - /^v\d+\.\d+\.\d+$/

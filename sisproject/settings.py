@@ -29,8 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'users',
-    'sources',
+    'sisdatasources',
     'rest_framework',
 ]
 
@@ -128,7 +127,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    ("datacatalogue", here('./static')),
+    ("sisproject", here('./static')),
 ]
 
 STATIC_ROOT = os.environ.get("STATIC_ROOT", here('../static_root'))

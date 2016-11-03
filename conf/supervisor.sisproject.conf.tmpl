@@ -1,0 +1,9 @@
+[program:gc]
+command=/usr/local/bin/uwsgi --ini /code/conf/uwsgi.ini
+directory=/code/
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/sisproject/app.log
+redirect_stderr=true
+virtualenv=/var/env/
+environment=DB_NAME="${DB_NAME}",DB_HOSTNAME="${DB_HOSTNAME}",DB_USERNAME="${DB_USERNAME}",DB_PASSWORD="${DB_PASSWORD}",DB_PORT="${DB_PORT}",STATIC_ROOT="${STATIC_ROOT}"

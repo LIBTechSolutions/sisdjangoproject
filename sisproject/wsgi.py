@@ -1,5 +1,5 @@
 """
-WSGI config for datacatalogue project.
+WSGI config for sisproject project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

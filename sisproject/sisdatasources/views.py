@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import serializers, viewsets, routers
-from sources.models import Source
-from users.serializers import SourceSerializer
+from sisdatasources.models import Sisdatasource
+from sisdatasources.serializers import SisdatasourceSerializer
 
 # Create your views here.
 
@@ -9,5 +9,5 @@ from users.serializers import SourceSerializer
 
 
 class SourceViewSet(viewsets.ModelViewSet):
-    queryset = Source.objects.all()
-    serializer_class = SourceSerializer
+    queryset = Sisdatasource.objects.all()
+    serializer_class = SisdatasourceSerializer

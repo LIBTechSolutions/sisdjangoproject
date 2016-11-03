@@ -1,8 +1,6 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from users.models import Contact
-from users.models import Tenant
 from django.utils.translation import ugettext as _
 
 
@@ -55,26 +53,13 @@ SCHEMA_TYPE_CHOICES = (
 )
 
 
-class Source(models.Model):
+class Sisdatasource(models.Model):
 
     """
     A source is a single data structure/type from a single application that
     sends data to the HIS data warehouse.  E.g. lab results from an LIS
     application
     """
-
-    tenant_id = models.ManyToManyField(
-        'users.Tenant',
-        related_query_name='source',
-        blank=False,
-    )
-
-    contact_id = models.OneToOneField(
-        'users.Contact',
-        related_name='maintainer',
-        null=False,
-        blank=False,
-    )
 
     access_method = models.CharField(
         _('Description of access protocol'),
