@@ -1,13 +1,20 @@
 from django.shortcuts import render
 from rest_framework import serializers, viewsets, routers
-from sisdatasources.models import Sisdatasource
-from sisdatasources.serializers import SisdatasourceSerializer
+from .models import Registration
+from .models import Student
+from .serializers import RegistrationSerializer
+from .serializers import StudentSerializer
 
 # Create your views here.
 
 # ViewSets to define the view behavior Source.
 
 
-class SourceViewSet(viewsets.ModelViewSet):
-    queryset = Sisdatasource.objects.all()
-    serializer_class = SisdatasourceSerializer
+class RegistrationViewSet(viewsets.ModelViewSet):
+    queryset = Registration.objects.all()
+    serializer_class = RegistrationSerializer
+
+
+class StudentViewSet(viewsets.ModelViewSet):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
