@@ -6,3 +6,4 @@ uwsgi==2.0.13.1
 requests==2.10.0
 djangorestframework==3.3.3
 supervisor==3.3.0
+django-multiselectfield==0.1.4

@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'sisdatasources',
     'rest_framework',
+    'multiselectfield',
 ]
 
 REST_FRAMEWORK = {
